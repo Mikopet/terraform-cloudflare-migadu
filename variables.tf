@@ -31,6 +31,12 @@ variable "tags" {
   default     = []
 }
 
+variable "subdomain_mx" {
+  description = "MX records for Subdomain Addressing"
+  type        = bool
+  default     = false
+}
+
 variable "dmarc" {
   description = "email address for DMARC rua"
   type = object({

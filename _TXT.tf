@@ -1,14 +1,26 @@
+locals {
+  rua_list = flatten(
+    [for k, l in coalesce(var.dmarc.rua, {}) :
+      [for v in coalesce(l, []) :
+        format("%s:%s", k, v)
+      ]
+    ]
+  )
+
+  rua_string = local.rua_list == [] ? "" : format(" rua=%s;", join(",", local.rua_list))
+}
+
 resource "cloudflare_record" "TXT" {
   for_each = {
     "SPF"          = "v=spf1 include:spf.migadu.com -all"
     "verification" = "hosted-email-verify=${var.verification_code}"
-    "dmarc"        = "v=DMARC1; p=quarantine;"
+    "dmarc"        = format("v=DMARC1; p=%s;%s", var.dmarc.p, local.rua_string)
   }
 
   zone_id = var.zone_id
   type    = "TXT"
   name    = each.key == "dmarc" ? "_dmarc" : "@"
-  value   = each.value
+  value   = "\"${each.value}\""
 
   # It should not be proxied
   proxied         = false

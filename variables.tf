@@ -31,3 +31,29 @@ variable "tags" {
   default     = []
 }
 
+variable "dmarc" {
+  description = "email address for DMARC rua"
+  type = object({
+    p = string
+    rua = optional(object({
+      mailto = optional(list(string))
+    }))
+  })
+  default = {
+    p = "quarantine"
+  }
+
+  validation {
+    error_message = "DMARC policy should be one of these: [none,quarantine,reject]"
+    condition     = contains(["none", "quarantine", "reject"], var.dmarc.p)
+  }
+
+  validation {
+    error_message = "DMARC policy emails in `mailto` should be valid"
+    condition = alltrue([
+      for a in coalesce(try(var.dmarc.rua.mailto, null), []) :
+      can(regex("^[^@]+@[^@]+\\.[^@]+$", a))
+    ])
+  }
+}
+

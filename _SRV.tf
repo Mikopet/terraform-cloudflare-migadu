@@ -24,7 +24,7 @@ resource "cloudflare_record" "SRV" {
 
   zone_id = var.zone_id
   type    = "SRV"
-  name    = "${each.key}._tcp.${var.domain}."
+  name    = "${each.key}._tcp"
 
   data {
     priority = 0

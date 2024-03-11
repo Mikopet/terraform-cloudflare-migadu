@@ -3,7 +3,7 @@ resource "cloudflare_record" "MX" {
 
   zone_id  = var.zone_id
   type     = "MX"
-  name     = "@"
+  name     = var.domain
   value    = "aspmx${count.index + 1}.migadu.com"
   priority = (count.index + 1) * 10
 

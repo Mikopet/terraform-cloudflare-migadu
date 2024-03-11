@@ -19,7 +19,7 @@ resource "cloudflare_record" "TXT" {
 
   zone_id = var.zone_id
   type    = "TXT"
-  name    = each.key == "dmarc" ? "_dmarc" : "@"
+  name    = each.key == "dmarc" ? "_dmarc" : var.domain
   value   = "\"${each.value}\""
 
   # It should not be proxied

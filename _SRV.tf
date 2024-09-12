@@ -24,17 +24,13 @@ resource "cloudflare_record" "SRV" {
 
   zone_id = var.zone_id
   type    = "SRV"
-  name    = "${each.key}._tcp"
+  name    = "${each.key}._tcp.${var.domain}"
 
   data {
     priority = 0
     weight   = 1
     port     = each.value.port
     target   = each.value.target
-    # these are deprecated values, but without them it won't work
-    service = each.key
-    proto   = "_tcp"
-    name    = var.domain
   }
 
   # It should not be proxied

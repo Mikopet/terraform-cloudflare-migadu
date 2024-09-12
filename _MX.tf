@@ -4,7 +4,7 @@ resource "cloudflare_record" "MX" {
   zone_id  = var.zone_id
   type     = "MX"
   name     = var.domain
-  value    = "aspmx${count.index + 1}.migadu.com"
+  content  = "aspmx${count.index + 1}.migadu.com"
   priority = (count.index + 1) * 10
 
   # It should not be proxied
@@ -22,7 +22,7 @@ resource "cloudflare_record" "MX-subdomain" {
   zone_id  = var.zone_id
   type     = "MX"
   name     = "*"
-  value    = "aspmx${count.index + 1}.migadu.com"
+  content  = "aspmx${count.index + 1}.migadu.com"
   priority = (count.index + 1) * 10
 
   # It should not be proxied

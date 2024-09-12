@@ -4,7 +4,7 @@ resource "cloudflare_record" "DKIM" {
   zone_id = var.zone_id
   type    = "CNAME"
   name    = "key${count.index + 1}._domainkey"
-  value   = "key${count.index + 1}.${var.domain}._domainkey.migadu.com."
+  content = "key${count.index + 1}.${var.domain}._domainkey.migadu.com."
 
   # It should not be proxied
   proxied         = false
@@ -19,7 +19,7 @@ resource "cloudflare_record" "autoconfig" {
   zone_id = var.zone_id
   type    = "CNAME"
   name    = "autoconfig"
-  value   = "autoconfig.migadu.com."
+  content = "autoconfig.migadu.com."
 
   # It should not be proxied
   proxied         = false

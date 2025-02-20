@@ -1,4 +1,4 @@
-resource "cloudflare_record" "MX" {
+resource "cloudflare_dns_record" "MX" {
   count = 2
 
   zone_id  = var.zone_id
@@ -8,15 +8,14 @@ resource "cloudflare_record" "MX" {
   priority = (count.index + 1) * 10
 
   # It should not be proxied
-  proxied         = false
-  ttl             = var.ttl
-  allow_overwrite = var.allow_overwrite
-  comment         = "migadu - MX host #${count.index + 1}"
+  proxied = false
+  ttl     = var.ttl
+  comment = "migadu - MX host #${count.index + 1}"
 
   tags = var.tags
 }
 
-resource "cloudflare_record" "MX-subdomain" {
+resource "cloudflare_dns_record" "MX-subdomain" {
   count = var.subdomain_mx ? 2 : 0
 
   zone_id  = var.zone_id
@@ -26,10 +25,9 @@ resource "cloudflare_record" "MX-subdomain" {
   priority = (count.index + 1) * 10
 
   # It should not be proxied
-  proxied         = false
-  ttl             = var.ttl
-  allow_overwrite = var.allow_overwrite
-  comment         = "migadu - MX host #${count.index + 1} (subdomain)"
+  proxied = false
+  ttl     = var.ttl
+  comment = "migadu - MX host #${count.index + 1} (subdomain)"
 
   tags = var.tags
 }

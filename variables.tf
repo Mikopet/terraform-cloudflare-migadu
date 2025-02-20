@@ -1,44 +1,51 @@
 variable "zone_id" {
-  description = "Zone ID for the zone to put records in"
+  description = "The ID of the Zone to put the records in"
   type        = string
 }
 
 variable "domain" {
-  description = "apex domain name of the DNS settings"
+  description = "The Apex domain name for the DNS settings"
   type        = string
 }
 
 variable "verification_code" {
-  description = "verification code"
+  description = "Migadu DNS verification code"
   type        = string
 }
 
 variable "ttl" {
-  description = "TTL in seconds. Between 60 and 86400 seconds, or 1 for Automatic"
+  description = "The TTL of DNS records in seconds"
   type        = number
   default     = 1
+
+  validation {
+    error_message = "The TTL of the records should be between 60 and 86400 seconds (omit for default automatic)"
+    condition     = var.ttl == 1 || (var.ttl >= 60 && var.ttl <= 86400)
+  }
 }
 
+# TODO: remove this at some point
 variable "allow_overwrite" {
-  description = "Enable/disable overwriting records"
+  description = "deprecated"
   type        = bool
   default     = false
+  nullable    = true
 }
 
 variable "tags" {
-  description = "tags for DNS records"
+  description = "The list of tags for the DNS records"
   type        = list(string)
   default     = []
 }
 
 variable "subdomain_mx" {
-  description = "MX records for Subdomain Addressing"
+  description = "Switch for Subdomain Addressing (MX)"
   type        = bool
   default     = false
 }
 
 variable "dmarc" {
-  description = "email address for DMARC rua"
+  description = "The DMARC policy configuration (p, rua.mailto)"
   type = object({
     p = string
     rua = optional(object({

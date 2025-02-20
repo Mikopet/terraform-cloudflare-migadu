@@ -1,4 +1,4 @@
-resource "cloudflare_record" "SRV" {
+resource "cloudflare_dns_record" "SRV" {
   for_each = {
     "_autodiscover" = {
       port   = 443
@@ -26,7 +26,7 @@ resource "cloudflare_record" "SRV" {
   type    = "SRV"
   name    = "${each.key}._tcp.${var.domain}"
 
-  data {
+  data = {
     priority = 0
     weight   = 1
     port     = each.value.port
@@ -34,10 +34,9 @@ resource "cloudflare_record" "SRV" {
   }
 
   # It should not be proxied
-  proxied         = false
-  ttl             = var.ttl
-  allow_overwrite = var.allow_overwrite
-  comment         = "migadu - service discovery for ${each.value.desc}"
+  proxied = false
+  ttl     = var.ttl
+  comment = "migadu - service discovery for ${each.value.desc}"
 
   tags = var.tags
 }

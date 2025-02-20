@@ -10,7 +10,7 @@ locals {
   rua_string = local.rua_list == [] ? "" : format(" rua=%s;", join(",", local.rua_list))
 }
 
-resource "cloudflare_record" "TXT" {
+resource "cloudflare_dns_record" "TXT" {
   for_each = {
     "SPF"          = "v=spf1 include:spf.migadu.com -all"
     "verification" = "hosted-email-verify=${var.verification_code}"
@@ -23,10 +23,9 @@ resource "cloudflare_record" "TXT" {
   content = "\"${each.value}\""
 
   # It should not be proxied
-  proxied         = false
-  ttl             = var.ttl
-  allow_overwrite = var.allow_overwrite
-  comment         = "migadu - ${each.key} record"
+  proxied = false
+  ttl     = var.ttl
+  comment = "migadu - ${each.key} record"
 
   tags = var.tags
 }
